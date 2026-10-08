@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<!-- Toont de melding en de foutmelding die de controller meegeeft. -->
+<div th:fragment="meldingen">
+	<div id="melding" class="alert alert-success" th:if="${melding}">
+		<span th:text="${melding}">Gelukt</span>
+	</div>
+	<div id="fout" class="alert alert-danger" th:if="${fout}">
+		<span th:text="${fout}">Er liep iets mis</span>
+	</div>
+</div>
+</body>
+</html>

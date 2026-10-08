@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.5.6</version>
+		<relativePath/>
+	</parent>
+
+	<groupId>be.lifeisbananas</groupId>
+	<artifactId>life-is-bananas</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>life-is-bananas</name>
+	<description>Receptbeheer voor vriesgedroogde snacks - Spring Boot, Thymeleaf, JPA en acceptatietesten met Cucumber/Selenium</description>
+
+	<properties>
+		<java.version>21</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+		<lombok.version>1.18.40</lombok.version>
+		<!-- Serenity bepaalt welke Selenium-versie meekomt: houd deze gelijk. -->
+		<serenity.version>4.2.9</serenity.version>
+		<selenium.version>4.26.0</selenium.version>
+		<cucumber.version>7.20.1</cucumber.version>
+	</properties>
+
+	<dependencies>
+		<!-- ===== Web- en datalaag ===== -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- Alleen nodig voor het demoprofiel, dat zonder MySQL draait. -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- Genereert getters/setters/constructors: zie de domeinklassen. -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>${lombok.version}</version>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- ===== Testen ===== -->
+		<!-- Bevat JUnit 5, AssertJ, Mockito en Hamcrest: niet apart toevoegen. -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Acceptatietesten: Cucumber op de JUnit 5 Platform -->
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-java</artifactId>
+			<version>${cucumber.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-junit-platform-engine</artifactId>
+			<version>${cucumber.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-suite</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Serenity maakt het HTML-rapport van de acceptatietesten -->
+		<dependency>
+			<groupId>net.serenity-bdd</groupId>
+			<artifactId>serenity-core</artifactId>
+			<version>${serenity.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.serenity-bdd</groupId>
+			<artifactId>serenity-cucumber</artifactId>
+			<version>${serenity.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Selenium stuurt de browser aan. Vanaf Selenium 4.6 zoekt
+			 Selenium Manager zelf de juiste chromedriver op. -->
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<version>${selenium.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<!-- Zet paden naar afhankelijkheden klaar als eigenschappen, zodat
+				 surefire Mockito hieronder als agent kan meegeven. -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>properties</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>${lombok.version}</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+
+			<!-- `mvn test` draait alleen de unit-testen. De acceptatietesten
+				 hebben een draaiende toepassing en een browser nodig en zitten
+				 daarom in het profiel `acceptance` (zie onder). -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>**/AcceptanceTestSuite.java</exclude>
+					</excludes>
+					<!-- Vanaf JDK 25 mag Mockito zichzelf niet meer als agent
+						 aanhaken: geef de agent expliciet mee. -Xshare:off houdt
+						 de JVM stil over het aangevulde bootstrap-classpath. -->
+					<argLine>-javaagent:${org.mockito:mockito-core:jar} -Xshare:off</argLine>
+					<!-- serenity-junit5 komt mee via serenity-cucumber en zet zich
+						 voor elke JUnit 5-test aan het werk. Bij de unit-testen
+						 levert dat alleen ruis op; in het profiel `acceptance`
+						 staat deze listener weer aan. JUnit leest deze instelling
+						 enkel als systeemeigenschap. -->
+					<systemPropertyVariables>
+						<junit.platform.execution.listeners.deactivate>
+							net.serenitybdd.junit5.SerenityTestExecutionListener
+						</junit.platform.execution.listeners.deactivate>
+					</systemPropertyVariables>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<!-- mvn verify -Pacceptance   (toepassing moet al draaien) -->
+		<profile>
+			<id>acceptance</id>
+			<build>
+				<plugins>
+					<!-- Failsafe en niet surefire: een falend scenario doet de build
+						 pas struikelen in de fase `verify`, zodat het Serenity-rapport
+						 ook van een mislukte run gemaakt wordt. -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-failsafe-plugin</artifactId>
+						<configuration>
+							<includes>
+								<include>**/AcceptanceTestSuite.java</include>
+							</includes>
+							<!-- Geef de instellingen van de toepassing door aan de
+								 testen, zodat beide naar dezelfde databank kijken. -->
+							<systemPropertyVariables>
+								<lib.base.url>${lib.base.url}</lib.base.url>
+								<lib.db.url>${lib.db.url}</lib.db.url>
+								<lib.db.user>${lib.db.user}</lib.db.user>
+								<lib.db.password>${lib.db.password}</lib.db.password>
+								<lib.headless>${lib.headless}</lib.headless>
+							</systemPropertyVariables>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>integration-test</goal>
+									<goal>verify</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>net.serenity-bdd.maven.plugins</groupId>
+						<artifactId>serenity-maven-plugin</artifactId>
+						<version>${serenity.version}</version>
+						<executions>
+							<execution>
+								<id>serenity-reports</id>
+								<phase>post-integration-test</phase>
+								<goals>
+									<goal>aggregate</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+			<properties>
+				<!-- Standaard: de toepassing draait op MySQL op poort 8080.
+					 Overschrijf ze op de commandolijn, bv. -Dlib.headless=true -->
+				<lib.base.url>http://localhost:8080</lib.base.url>
+				<lib.db.url>jdbc:mysql://localhost:3306/life_is_bananas</lib.db.url>
+				<lib.db.user>lifeisbananasuser</lib.db.user>
+				<lib.db.password>lifeisbananasuserpw</lib.db.password>
+				<lib.headless>false</lib.headless>
+			</properties>
+		</profile>
+
+		<!-- Dezelfde acceptatietesten, maar tegen de toepassing die met het
+			 profiel `demo` op een H2-bestandsdatabank draait. Handig om alles
+			 te tonen zonder MySQL te installeren. -->
+		<profile>
+			<id>acceptance-demo</id>
+			<properties>
+				<lib.base.url>http://localhost:8080</lib.base.url>
+				<lib.db.url>jdbc:h2:file:./target/demo-db;AUTO_SERVER=TRUE;MODE=MySQL;DATABASE_TO_LOWER=TRUE</lib.db.url>
+				<lib.db.user>sa</lib.db.user>
+				<lib.db.password></lib.db.password>
+				<lib.headless>true</lib.headless>
+			</properties>
+		</profile>
+	</profiles>
+
+</project>
