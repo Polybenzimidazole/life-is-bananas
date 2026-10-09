@@ -15,7 +15,7 @@ public class ReceptenPage extends AbstractPage {
         input.clear();
         input.sendKeys(name);
         driver.findElement(By.id("zoeken")).click();
-        waitFor().until(ExpectedConditions.stalenessOf(input));
+        waitUntilGone(input);
         waitFor().until(ExpectedConditions.visibilityOfElementLocated(By.id("zoek")));
         return this;
     }

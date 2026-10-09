@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="nl" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Receptuur')}"></head>
+<body>
+<div th:replace="~{fragments/header :: header}">Header</div>
+<div class="container">
+
+	<h1 id="receptuurNaam" th:text="${receptuur.name}">Naam van de receptuur</h1>
+
+	<div th:replace="~{fragments/alert :: meldingen}"></div>
+
+	<p>
+		<b>Versie:</b> <span id="versie" th:text="${receptuur.version}">1.0</span><br/>
+		<b>Status:</b> <span id="status" th:text="${receptuur.status}">IN_DEVELOPMENT</span><br/>
+		<b>Bereidingswijze:</b>
+		<span id="bereidingswijze" th:text="${receptuur.preparationMethod}">Bereidingswijze</span>
+	</p>
+
+	<h2>Ingrediënten (<span id="aantalIngredienten" th:text="${receptuur.ingredientCount}">0</span>)</h2>
+
+	<table id="ingredienten" class="table table-striped" th:if="${receptuur.ingredientCount > 0}">
+		<thead>
+		<tr>
+			<th>Stap</th>
+			<th>Grondstof</th>
+			<th>Hoeveelheid</th>
+			<th>Eenheid</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr th:each="ingredient : ${receptuur.ingredients}">
+			<td th:text="${ingredient.sequence}">1</td>
+			<td class="grondstof" th:text="${ingredient.rawMaterialName}">Banana</td>
+			<td class="hoeveelheid" th:text="${ingredient.quantityDisplay}">300</td>
+			<td class="eenheid" th:text="${ingredient.unit}">GRAM</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<p id="geenIngredienten" th:if="${receptuur.ingredientCount == 0}">
+		Deze receptuur heeft nog geen ingrediënten.
+	</p>
+
+	<h2>Ingrediënt toevoegen</h2>
+	<form method="post" th:action="@{/recept/ingredient.html}" class="form-inline">
+		<input type="hidden" name="id" th:value="${receptuur.id}"/>
+		<div class="form-group">
+			<label for="rawMaterialId">Grondstof:</label>
+			<select id="rawMaterialId" name="rawMaterialId" class="form-control">
+				<option th:each="grondstof : ${grondstoffen}"
+						th:value="${grondstof.id}"
+						th:text="${grondstof.name}">Banana
+				</option>
+			</select>
+		</div>
+		<div class="form-group">
+			<label for="quantity">Hoeveelheid:</label>
+			<input type="text" id="quantity" name="quantity" class="form-control"/>
+		</div>
+		<div class="form-group">
+			<label for="unit">Eenheid:</label>
+			<select id="unit" name="unit" class="form-control">
+				<option th:each="eenheid : ${eenheden}" th:value="${eenheid}" th:text="${eenheid}">GRAM</option>
+			</select>
+		</div>
+		<input id="voegIngredientToe" name="voegIngredientToe" type="submit"
+			   class="btn btn-primary" value="Toevoegen"/>
+	</form>
+
+	<h2>Status wijzigen</h2>
+	<form method="post" th:action="@{/recept/status.html}" class="form-inline">
+		<input type="hidden" name="id" th:value="${receptuur.id}"/>
+		<div class="form-group">
+			<label for="doelStatus">Nieuwe status:</label>
+			<select id="doelStatus" name="doelStatus" class="form-control">
+				<option th:each="mogelijkeStatus : ${statussen}"
+						th:value="${mogelijkeStatus}"
+						th:text="${mogelijkeStatus}">TESTED
+				</option>
+			</select>
+		</div>
+		<input id="wijzigStatus" name="wijzigStatus" type="submit"
+			   class="btn btn-primary" value="Status wijzigen"/>
+	</form>
+
+	<br/>
+	<p><a id="terugNaarRecepturen" th:href="@{/recepten.html}">Terug naar de recepturen</a></p>
+
+	<div th:replace="~{fragments/footer :: footer}">Footer</div>
+</div>
+</body>
+</html>

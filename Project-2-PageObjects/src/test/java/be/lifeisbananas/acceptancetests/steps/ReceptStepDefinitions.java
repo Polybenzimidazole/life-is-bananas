@@ -3,6 +3,7 @@ package be.lifeisbananas.acceptancetests.steps;
 import be.lifeisbananas.acceptancetests.pageobjects.LoginPage;
 import be.lifeisbananas.acceptancetests.pageobjects.ReceptenPage;
 import be.lifeisbananas.acceptancetests.pageobjects.ReceptPage;
+import be.lifeisbananas.acceptancetests.support.Browserlogboek;
 import be.lifeisbananas.acceptancetests.support.Testdata;
 import be.lifeisbananas.acceptancetests.support.Testomgeving;
 import io.cucumber.java.After;
@@ -25,6 +26,7 @@ public class ReceptStepDefinitions {
 
     @Before
     public void openBrowser() {
+        Browserlogboek.dempCdpWaarschuwingen();
         ChromeOptions options = new ChromeOptions();
         if (Testomgeving.headless()) options.addArguments("--headless=new");
         driver = new ChromeDriver(options);

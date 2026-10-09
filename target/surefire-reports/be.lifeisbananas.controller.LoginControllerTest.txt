@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: be.lifeisbananas.controller.LoginControllerTest
+-------------------------------------------------------------------------------
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.989 s -- in be.lifeisbananas.controller.LoginControllerTest

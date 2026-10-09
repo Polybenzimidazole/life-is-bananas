@@ -32,7 +32,7 @@ public class ReceptPage extends AbstractPage {
     }
 
     private void waitUntilReloaded(WebElement oldStatus) {
-        waitFor().until(ExpectedConditions.stalenessOf(oldStatus));
+        waitUntilGone(oldStatus);
         waitFor().until(ExpectedConditions.visibilityOfElementLocated(By.id("status")));
     }
 

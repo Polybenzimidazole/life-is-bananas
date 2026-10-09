@@ -1,5 +1,6 @@
 package be.lifeisbananas.acceptancetests.steps;
 
+import be.lifeisbananas.acceptancetests.support.Browserlogboek;
 import be.lifeisbananas.acceptancetests.support.Testdata;
 import be.lifeisbananas.acceptancetests.support.Testomgeving;
 import io.cucumber.java.After;
@@ -33,6 +34,7 @@ public class ReceptStepDefinitions {
 
 	@Before
 	public void openBrowser() {
+		Browserlogboek.dempCdpWaarschuwingen();
 		ChromeOptions options = new ChromeOptions();
 		if (Testomgeving.headless()) {
 			options.addArguments("--headless=new");

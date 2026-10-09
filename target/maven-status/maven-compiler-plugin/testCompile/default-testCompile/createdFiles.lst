@@ -1,0 +1,9 @@
+be\lifeisbananas\acceptancetests\steps\ReceptStepDefinitions.class
+be\lifeisbananas\domain\FormulaTest.class
+be\lifeisbananas\service\FormulaServiceImplTest.class
+be\lifeisbananas\acceptancetests\support\Testdata.class
+be\lifeisbananas\domain\DomeinMappingTest.class
+be\lifeisbananas\acceptancetests\support\Testomgeving.class
+be\lifeisbananas\controller\LoginControllerTest.class
+be\lifeisbananas\controller\ReceptControllerTest.class
+be\lifeisbananas\acceptancetests\AcceptanceTestSuite.class
