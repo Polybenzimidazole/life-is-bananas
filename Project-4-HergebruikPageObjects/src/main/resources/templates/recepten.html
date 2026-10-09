@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="nl" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Recepturen')}"></head>
+<body>
+<div th:replace="~{fragments/header :: header}">Header</div>
+<div class="container">
+	<h1>Recepturen</h1>
+
+	<form method="get" th:action="@{/recepten.html}" class="form-inline">
+		<div class="form-group">
+			<label for="zoek">Zoek op naam:</label>
+			<input type="text" id="zoek" name="zoek" class="form-control" th:value="${zoek}"/>
+		</div>
+		<input id="zoeken" name="zoeken" type="submit" class="btn btn-primary" value="Zoeken"/>
+	</form>
+
+	<br/>
+
+	<table id="recepturen" class="table table-striped" th:if="${!#lists.isEmpty(recepturen)}">
+		<thead>
+		<tr>
+			<th>Naam</th>
+			<th>Versie</th>
+			<th>Status</th>
+			<th>Bio-ingenieur</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr th:each="receptuur : ${recepturen}">
+			<td>
+				<a th:href="@{/recept.html(id=${receptuur.id})}" th:text="${receptuur.name}">Naam</a>
+			</td>
+			<td th:text="${receptuur.version}">1.0</td>
+			<td th:text="${receptuur.status}">IN_DEVELOPMENT</td>
+			<td th:text="${receptuur.bioEngineer != null} ? ${receptuur.bioEngineer.name} : ''">Naam</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<p id="geenResultaten" th:if="${#lists.isEmpty(recepturen)}">Geen recepturen gevonden.</p>
+
+	<div th:replace="~{fragments/footer :: footer}">Footer</div>
+</div>
+</body>
+</html>

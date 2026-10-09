@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="nl" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Aanmelden')}"></head>
+<body>
+<div th:replace="~{fragments/header :: header}">Header</div>
+<div class="container">
+	<h1>Aanmelden</h1>
+
+	<form class="form-narrow" method="post" th:action="@{/login.html}">
+		<div id="fout" class="alert alert-danger" th:if="${fout}">
+			<span th:text="${fout}">Er liep iets mis</span>
+		</div>
+
+		<fieldset>
+			<div class="form-group">
+				<label for="email">E-mailadres:</label>
+				<input type="text" id="email" name="email" class="form-control" th:value="${email}"/>
+			</div>
+			<div class="form-group">
+				<label for="password">Wachtwoord:</label>
+				<input type="password" id="password" name="password" class="form-control"/>
+			</div>
+			<input id="aanmelden" name="aanmelden" type="submit" class="btn btn-primary" value="Aanmelden"/>
+		</fieldset>
+	</form>
+
+	<div th:replace="~{fragments/footer :: footer}">Footer</div>
+</div>
+</body>
+</html>

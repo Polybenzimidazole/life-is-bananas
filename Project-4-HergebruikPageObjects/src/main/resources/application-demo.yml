@@ -1,0 +1,23 @@
+# Demoprofiel: draait zonder MySQL op een H2-bestandsdatabank.
+#
+#   mvn spring-boot:run -Dspring-boot.run.profiles=demo
+#
+# AUTO_SERVER laat een tweede JVM - de acceptatietest - op dezelfde
+# databank aansluiten. Hibernate bouwt het schema hier zelf op; de
+# startgegevens staan in demo-data.sql.
+spring:
+  datasource:
+    url: jdbc:h2:file:./target/demo-db;AUTO_SERVER=TRUE;MODE=MySQL;DATABASE_TO_LOWER=TRUE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    defer-datasource-initialization: true
+
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:demo-data.sql

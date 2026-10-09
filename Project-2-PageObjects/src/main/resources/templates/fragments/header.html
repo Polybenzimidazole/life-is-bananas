@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="navbar navbar-inverse navbar-fixed-top" th:fragment="header">
+	<div class="container">
+		<div class="navbar-header">
+			<a class="navbar-brand" th:href="@{/recepten.html}">Life is Bananas</a>
+		</div>
+		<ul class="nav navbar-nav">
+			<li><a th:href="@{/recepten.html}">Recepturen</a></li>
+		</ul>
+		<ul class="nav navbar-nav navbar-right" th:if="${session.bioEngineerName}">
+			<li><a id="aangemeldeGebruiker" th:text="${session.bioEngineerName}">Naam</a></li>
+			<li><a id="afmelden" th:href="@{/logout.html}">Afmelden</a></li>
+		</ul>
+	</div>
+</div>
+</body>
+</html>
