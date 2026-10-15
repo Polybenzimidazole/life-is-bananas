@@ -22,5 +22,6 @@ Feature: Recipe management follows the business rules
     Then no recipes are found
 
   Scenario: An incorrect password does not grant access
+    Given the bio-engineer is not signed in
     When someone attempts to sign in with an incorrect password
     Then access to recipe management is refused

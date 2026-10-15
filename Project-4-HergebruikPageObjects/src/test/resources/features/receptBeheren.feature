@@ -22,12 +22,13 @@ Feature: Recipe management follows the business rules
     Then no recipes are found
 
   Scenario: An incorrect password does not grant access
+    Given the bio-engineer is not signed in
     When someone attempts to sign in with an incorrect password
     Then access to recipe management is refused
 
   Scenario: An approved recipe cannot be modified
     Given the bio-engineer is signed in
-    When the bio-engineer approves the tested recipe "Banana Chips Formula"
-    And the bio-engineer tries to add "300" "GRAM" of "Banana" to the approved recipe
+    And the tested recipe "Banana Chips Formula" has been approved
+    When the bio-engineer tries to add "300" "GRAM" of "Banana" to the approved recipe
     Then "Banana Chips Formula" is still approved with 1 ingredient
     And the system explains that approved recipes cannot be changed
