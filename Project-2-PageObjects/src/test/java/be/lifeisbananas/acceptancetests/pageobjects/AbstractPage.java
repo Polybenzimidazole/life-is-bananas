@@ -1,5 +1,6 @@
 package be.lifeisbananas.acceptancetests.pageobjects;
 
+import be.lifeisbananas.acceptancetests.support.Browserwacht;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
@@ -18,7 +19,7 @@ public abstract class AbstractPage {
     }
 
     protected WebDriverWait waitFor() {
-        return new WebDriverWait(driver, TIMEOUT);
+        return new Browserwacht(driver, TIMEOUT);
     }
 
     /**

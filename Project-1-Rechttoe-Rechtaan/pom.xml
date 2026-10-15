@@ -29,6 +29,8 @@
 		<serenity.version>4.2.9</serenity.version>
 		<selenium.version>4.26.0</selenium.version>
 		<cucumber.version>7.20.1</cucumber.version>
+		<!-- Zie dependencyManagement onderaan. -->
+		<guava.version>33.4.8-jre</guava.version>
 	</properties>
 
 	<dependencies>
@@ -121,6 +123,21 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<!-- Serenity sleept Guava 33.3.1 mee. Die versie regelt AbstractFuture nog
+		 met sun.misc.Unsafe, en sinds JDK 24 waarschuwt de JVM bij elk gebruik
+		 daarvan. Vanaf Guava 33.4 gebeurt dat met VarHandles en blijft het
+		 stil. Guava staat enkel op het testpad: de toepassing zelf gebruikt
+		 het niet. -->
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>${guava.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
 		<plugins>

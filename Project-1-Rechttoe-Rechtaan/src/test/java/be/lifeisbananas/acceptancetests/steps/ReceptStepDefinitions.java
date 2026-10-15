@@ -1,6 +1,7 @@
 package be.lifeisbananas.acceptancetests.steps;
 
 import be.lifeisbananas.acceptancetests.support.Browserlogboek;
+import be.lifeisbananas.acceptancetests.support.Browserwacht;
 import be.lifeisbananas.acceptancetests.support.Testdata;
 import be.lifeisbananas.acceptancetests.support.Testomgeving;
 import io.cucumber.java.After;
@@ -200,6 +201,6 @@ public class ReceptStepDefinitions {
 	}
 
 	private WebDriverWait wacht() {
-		return new WebDriverWait(driver, TIMEOUT);
+		return new Browserwacht(driver, TIMEOUT);
 	}
 }
