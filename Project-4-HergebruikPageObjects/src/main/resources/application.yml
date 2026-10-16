@@ -3,21 +3,16 @@ spring:
     name: life-is-bananas
 
   datasource:
-    # Overschrijf desgewenst met omgevingsvariabelen, zodat er geen
-    # wachtwoorden in versiebeheer belanden.
-    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:life_is_bananas}
-    username: ${DB_USER:lifeisbananasuser}
-    password: ${DB_PASSWORD:lifeisbananasuserpw}
+    url: jdbc:mysql://${DB_HOST:mariadb-server}:${DB_PORT:3306}/${DB_NAME:life_is_bananas}
+    username: ${DB_USER:root}
+    password: ${DB_PASSWORD:MySQLRootPwd}
 
   jpa:
-    # Het schema komt uit db/life_is_bananas.sql: Hibernate raakt het niet aan.
     hibernate:
       ddl-auto: none
-    # Sessies blijven niet openstaan tijdens het renderen van de view.
     open-in-view: false
 
   thymeleaf:
-    # Handig tijdens het ontwikkelen: templates herladen zonder herstart.
     cache: false
 
 logging:
