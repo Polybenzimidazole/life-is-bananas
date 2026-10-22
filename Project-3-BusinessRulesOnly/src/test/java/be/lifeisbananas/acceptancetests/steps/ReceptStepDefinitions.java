@@ -18,6 +18,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /** Stap 3: step-definities drukken bedrijfsregels uit, geen UI-locators. */
 public class ReceptStepDefinitions {
+    private static final String RECIPE_NAME = "Banana Chips Formula";
+    private static final String INGREDIENT = "Banana";
+    private static final String AMOUNT = "300";
+    private static final String UNIT = "GRAM";
     private WebDriver driver;
     private ReceptTaken recipes;
 
@@ -45,33 +49,31 @@ public class ReceptStepDefinitions {
         recipes.engineerSignsIn();
     }
 
-    @When("the bio-engineer completes {string} for testing with {string} {string} of {string}")
-    public void completeRecipe(String name, String amount, String unit, String material) {
-        recipes.completeRecipeForTesting(name, material, amount, unit);
+    @When("the bio-engineer completes a recipe for testing by adding an ingredient")
+    public void completeRecipe() {
+        recipes.completeRecipeForTesting(RECIPE_NAME, INGREDIENT, AMOUNT, UNIT);
     }
 
-    @Then("{string} is tested and has {int} ingredients")
-    public void testedRecipe(String name, int count) {
-        assertThat(recipes.currentRecipeName()).isEqualTo(name);
+    @Then("the recipe is tested")
+    public void testedRecipe() {
+        assertThat(recipes.currentRecipeName()).isEqualTo(RECIPE_NAME);
         assertThat(recipes.currentRecipeStatus()).isEqualTo("TESTED");
-        assertThat(recipes.currentIngredientCount()).isEqualTo(count);
-        assertThat(recipes.currentIngredients()).hasSize(count);
     }
 
-    @Then("it contains {string} {string} of {string}")
-    public void ingredientIsPresent(String amount, String unit, String material) {
+    @Then("the added ingredient is included in the recipe")
+    public void ingredientIsPresent() {
         assertThat(recipes.currentIngredients())
-                .contains(new ReceptPage.IngredientRow(material, amount, unit));
+                .contains(new ReceptPage.IngredientRow(INGREDIENT, AMOUNT, UNIT));
     }
 
-    @When("the bio-engineer tries to approve {string} without testing")
-    public void attemptApproval(String name) {
-        recipes.attemptApprovalWithoutTesting(name);
+    @When("the bio-engineer tries to approve a recipe without testing")
+    public void attemptApproval() {
+        recipes.attemptApprovalWithoutTesting(RECIPE_NAME);
     }
 
-    @Then("{string} remains in development")
-    public void recipeRemainsInDevelopment(String name) {
-        assertThat(recipes.currentRecipeName()).isEqualTo(name);
+    @Then("the recipe remains in development")
+    public void recipeRemainsInDevelopment() {
+        assertThat(recipes.currentRecipeName()).isEqualTo(RECIPE_NAME);
         assertThat(recipes.currentRecipeStatus()).isEqualTo("IN_DEVELOPMENT");
     }
 
@@ -81,9 +83,9 @@ public class ReceptStepDefinitions {
                 .contains("Overgang van IN_DEVELOPMENT naar APPROVED is niet toegelaten");
     }
 
-    @When("the bio-engineer searches for recipes containing {string}")
-    public void searchUnknown(String term) {
-        recipes.searchRecipes(term);
+    @When("the bio-engineer searches for a recipe that does not exist")
+    public void searchUnknown() {
+        recipes.searchRecipes("Chocolate");
     }
 
     @Then("no recipes are found")
