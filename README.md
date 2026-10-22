@@ -1,5 +1,10 @@
 # Life is Bananas
 
+Project 1 is uitgebreid met een **REST-API en Vue 3-frontend**. De startinstructies,
+MySQL/Docker-configuratie en het API-contract staan in
+[Project-1-Rechttoe-Rechtaan/README.md](Project-1-Rechttoe-Rechtaan/README.md).
+Voer de Maven-commando's hieronder uit vanuit die projectmap.
+
 Webtoepassing voor het receptbeheer van vriesgedroogde snacks: Spring Boot met
 Thymeleaf-pagina's, JPA op MySQL, en een geautomatiseerde UI-acceptatietest met
 Cucumber en Selenium.

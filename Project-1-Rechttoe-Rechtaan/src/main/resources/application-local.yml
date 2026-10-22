@@ -1,0 +1,6 @@
+# Lokale MySQL uit compose.yaml; de bestaande standaardconfiguratie blijft bruikbaar.
+spring:
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:life_is_bananas}
+    username: ${DB_USER:lifeisbananasuser}
+    password: ${DB_PASSWORD:lifeisbananasuserpw}
