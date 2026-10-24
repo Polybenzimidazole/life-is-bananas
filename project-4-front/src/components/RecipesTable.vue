@@ -73,10 +73,10 @@ export default {
       },
 
       endpoints: {
-        getAll:  'http://localhost:8080/api/recipes/all',
-        create:  'http://localhost:8080/api/recipes/add',
-        update:  'http://localhost:8080/api/recipes/update',
-        delete:  'http://localhost:8080/api/recipes/delete'
+        getAll:  'http://localhost:8080/recipes/all',
+        create:  'http://localhost:8080/recipes/add',
+        update:  'http://localhost:8080/recipes/update',
+        delete:  'http://localhost:8080/recipes/delete'
       }
     }
   },
