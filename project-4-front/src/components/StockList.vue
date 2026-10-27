@@ -30,6 +30,7 @@
 
 <script>
 import axios from 'axios'
+import { apiBaseUrl } from '@/config/api'
 
 export default {
   name: 'StockList',
@@ -37,9 +38,9 @@ export default {
     return {
       stockList: [],
       endpoints: {
-        getAll:  'http://localhost:8080/stock/all',
-        add:  'http://localhost:8080/stock/add'
-      }    }
+        getAll: `${apiBaseUrl}/stock/all`,
+        add: `${apiBaseUrl}/stock/add`
+      }   }
   },
   mounted() {
     this.fetchStockList()

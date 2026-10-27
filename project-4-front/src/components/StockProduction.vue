@@ -37,7 +37,7 @@
 
 <script>
 import axios from 'axios'
-
+import { apiBaseUrl } from '@/config/api'
 export default {
   name: 'StockProduction',
   data() {
@@ -47,8 +47,8 @@ export default {
       preparationQuantity: 1,
       errorMessage: '',
       endpoints: {
-        getRecipes: 'http://localhost:8080/recipes/all',
-        useStock: 'http://localhost:8080/stocks/use'
+        getRecipes: `${apiBaseUrl}/recipes/all`,
+        useStock: `${apiBaseUrl}/stocks/use`
       }
     }
   },

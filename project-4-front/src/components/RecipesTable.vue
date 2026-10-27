@@ -58,6 +58,7 @@
 
 <script>
 import axios from 'axios'
+import { apiBaseUrl } from '@/config/api'
 
 export default {
   name: 'RecipesTable',
@@ -73,10 +74,10 @@ export default {
       },
 
       endpoints: {
-        getAll:  'http://localhost:8080/recipes/all',
-        create:  'http://localhost:8080/recipes/add',
-        update:  'http://localhost:8080/recipes/update',
-        delete:  'http://localhost:8080/recipes/delete'
+        getAll:  `${apiBaseUrl}/recipes/all`,
+        create:  `${apiBaseUrl}/recipes/add`,
+        update:  `${apiBaseUrl}/recipes/update`,
+        delete:  `${apiBaseUrl}/recipes/delete`
       }
     }
   },
