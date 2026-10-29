@@ -1,7 +1,7 @@
 <template>
   <div class="home-container">
     <div class="hero-section">
-      <h1>Welcome to Life is Bananas 🍌</h1>
+      <h1>Welcome to Life is Bananas</h1>
       <p class="subtitle">
         Your all-in-one platform to manage recipes and track kitchen stock in real time.
       </p>
@@ -12,7 +12,6 @@
 
       <!-- Card 1: Recipes -->
       <div class="feature-card">
-        <div class="icon">📖</div>
         <h2>Recipe Management</h2>
         <p>
           Browse your full recipe collection, add new culinary creations, update existing ingredients, or remove outdated recipes.
@@ -22,7 +21,6 @@
 
       <!-- Card 2: Stock & Production -->
       <div class="feature-card">
-        <div class="icon">📦</div>
         <h2>Stock & Production</h2>
         <p>
           Track reserved ingredients, increment stock quantities, and automatically deduct supplies when preparing recipe portions.
