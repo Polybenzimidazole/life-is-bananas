@@ -5,6 +5,7 @@
       <router-link to="/recipes">Recipes</router-link> |
       <router-link to="/production">Production Management</router-link> |
       <router-link to="/about">About Us</router-link>
+      <router-link to="/stock">Stock</router-link>
     </nav>
     <router-view/>
   </div>

@@ -1,6 +1,12 @@
+
 <template>
   <div class="stock-list-card">
     <h2>Current Stock</h2>
+
+    <p v-if="loading">Loading stock...</p>
+    <p v-if="errorMessage" class="error">
+      {{ errorMessage }}
+    </p>
 
     <table class="stock-table">
       <thead>
@@ -10,17 +16,28 @@
         <th>Action</th>
       </tr>
       </thead>
+
       <tbody>
       <tr v-for="item in stockList" :key="item.id">
         <td>{{ item.name }}</td>
-        <td><strong>{{ item.quantity }}</strong> {{ item.unit }}</td>
+
         <td>
-          <button class="btn btn-add" @click="addStockQuantity(item)">
-            + 100 Add
+          <strong>{{ item.quantity }}</strong>
+          {{ item.unit }}
+        </td>
+
+        <td>
+          <button
+              class="btn btn-add"
+              :disabled="addingId === item.id"
+              @click="addStockQuantity(item)"
+          >
+            {{ addingId === item.id ? 'Adding...' : '+ 100 Add' }}
           </button>
         </td>
       </tr>
-      <tr v-if="stockList.length === 0">
+
+      <tr v-if="!loading && stockList.length === 0">
         <td colspan="3">No stock items found.</td>
       </tr>
       </tbody>
@@ -33,30 +50,93 @@ import axios from 'axios'
 
 export default {
   name: 'StockList',
+
   data() {
     return {
       stockList: [],
+      loading: false,
+      addingId: null,
+      errorMessage: '',
+
       endpoints: {
-        getAll:  'http://localhost:8080/stock/all',
-        add:  'http://localhost:8080/stock/add'
-      }    }
+        getAll: 'http://localhost:8080/stocks/all',
+        add: 'http://localhost:8080/stocks/add/',
+        csrf: 'http://localhost:8080/recipes/csrf'
+      }
+    }
   },
+
   mounted() {
     this.fetchStockList()
   },
+
   methods: {
-    fetchStockList() {
-      axios.get(this.endpoint.getAll, { withCredentials: true })
-          .then(response => {
-            this.stockList = response.data
-          })
+    async fetchStockList() {
+      this.loading = true
+      this.errorMessage = ''
+
+      try {
+        const response = await axios.get(
+            this.endpoints.getAll,
+            {
+              withCredentials: true,
+              headers: {
+                Accept: 'application/json'
+              }
+            }
+        )
+
+        if (!Array.isArray(response.data)) {
+          throw new Error('Server did not return a stock list')
+        }
+
+        this.stockList = response.data
+
+      } catch (error) {
+        console.error('Failed to load stock:', error)
+        this.errorMessage = 'Failed to load stock.'
+      } finally {
+        this.loading = false
+      }
     },
 
-    addStockQuantity(item) {
-      axios.post(`${this.endpoint.add}${item.id}`, { amount: 50 }, { withCredentials: true })
-          .then(() => {
-            item.quantity = response.data.quantity;
-          })
+    async addStockQuantity(item) {
+      this.errorMessage = ''
+      this.addingId = item.id
+
+      try {
+        const csrfResponse = await axios.get(
+            this.endpoints.csrf,
+            { withCredentials: true }
+        )
+
+        const csrf = csrfResponse.data
+
+        if (!csrf.token || !csrf.headerName) {
+          throw new Error('Invalid CSRF token')
+        }
+
+        await axios.post(
+            `${this.endpoints.add}${item.id}`,
+            { amount: 100 },
+            {
+              withCredentials: true,
+              headers: {
+                [csrf.headerName]: csrf.token
+              }
+            }
+        )
+
+        // Haal de actuele voorraad opnieuw op
+        await this.fetchStockList()
+
+      } catch (error) {
+        console.error('Failed to add stock:', error)
+        this.errorMessage =
+            'Failed to add stock. Check your permissions and server logs.'
+      } finally {
+        this.addingId = null
+      }
     }
   }
 }
@@ -76,7 +156,8 @@ export default {
   margin-top: 10px;
 }
 
-.stock-table th, .stock-table td {
+.stock-table th,
+.stock-table td {
   border: 1px solid #ddd;
   padding: 10px;
   text-align: left;
@@ -94,5 +175,15 @@ export default {
   border-radius: 4px;
   cursor: pointer;
   font-weight: bold;
+}
+
+.btn-add:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error {
+  color: #dc3545;
+  margin-top: 10px;
 }
 </style>
