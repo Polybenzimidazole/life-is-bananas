@@ -1,0 +1,44 @@
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    root /var/www/html;
+    index index.html;
+    server_name localhost;
+
+    # Vue.js frontend
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # REST API naar Spring Boot
+    location /api/ {
+        proxy_pass http://backend:8080/;
+    }
+
+    # OAuth 2.0 en Spring Security
+    location /oauth2/ {
+        proxy_pass http://backend:8080;
+    }
+
+    location /login {
+        proxy_pass http://backend:8080;
+    }
+
+    location /logout {
+        proxy_pass http://backend:8080;
+    }
+
+    location /error {
+        proxy_pass http://backend:8080;
+    }
+
+    # Forwarded headers
+    proxy_http_version 1.1;
+    proxy_set_header Host              $http_host;
+    proxy_set_header X-Forwarded-Host  $http_host;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Forwarded-Port  8083;
+    proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+    proxy_set_header X-Real-IP         $remote_addr;
+}

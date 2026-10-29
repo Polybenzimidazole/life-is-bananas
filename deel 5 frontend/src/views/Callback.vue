@@ -27,8 +27,7 @@ export default {
   },
 
   async mounted() {
-    // Tijdelijke test: controleren of Callback.vue wordt uitgevoerd
-    alert('Callback.vue wordt uitgevoerd!')
+
 
     try {
       const tokens = await handleCallback()

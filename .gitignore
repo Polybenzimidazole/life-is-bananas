@@ -4,3 +4,7 @@
 **/.env.local
 **/.env.*.local
 **/src/main/resources/static/app/
+**/.idea/
+deel 5 deployment/nginxhtmlmount/
+deel 5 deployment/nginxetcmount/cert.key
+deel 5 deployment/nginxetcmount/cert.crt

@@ -64,8 +64,8 @@ export default {
       errorMessage: '',
 
       endpoints: {
-        getAll: 'http://localhost:8080/stocks/all',
-        add: 'http://localhost:8080/stocks/add/'
+        getAll: '/api/stocks/all',
+        add: '/api/stocks/add/'
       }
     }
   },

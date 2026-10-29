@@ -1,4 +1,6 @@
-
+server:
+  port: 8080
+  forward-headers-strategy: framework
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/life_is_bananas_api

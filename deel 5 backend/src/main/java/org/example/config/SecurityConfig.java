@@ -66,6 +66,9 @@ public class SecurityConfig {
                         )
                 )
 
+                .csrf(csrf -> csrf.ignoringRequestMatchers(
+                        authorizationServerConfigurer.getEndpointsMatcher()
+                ))
                 .cors(Customizer.withDefaults());
 
         return http.build();
@@ -166,7 +169,10 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowedOrigins(
-                List.of("http://localhost:8889")
+                List.of(
+                        "http://localhost:8889",
+                        "http://localhost:8083"
+                )
         );
 
         config.setAllowedMethods(

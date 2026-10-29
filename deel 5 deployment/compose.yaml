@@ -1,0 +1,51 @@
+services:
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: life_is_bananas_api
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: Admin123
+      MYSQL_ROOT_PASSWORD: local-root-password
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p$$MYSQL_ROOT_PASSWORD"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  phpmyadmin:
+    image: phpmyadmin:5
+    environment:
+      PMA_HOST: mysql
+    ports:
+      - "127.0.0.1:8081:80"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  backend:
+    image: eclipse-temurin:21-jre
+    volumes:
+      - "../deel 5 backend/target/Life_is_bananas_API_backend-1.0-SNAPSHOT.jar:/app/app.jar:ro"
+    command: ["java", "-jar", "/app/app.jar", "--app.db-init=true"]
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/life_is_bananas_api
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: Admin123
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  frontend:
+    image: nginx:1.29
+    ports:
+      - "127.0.0.1:8083:80"
+    volumes:
+      - ./nginxetcmount:/etc/nginx:ro
+      - ./nginxhtmlmount:/var/www/html:ro
+    depends_on:
+      - backend
+
+volumes:
+  mysql-data:

@@ -175,11 +175,11 @@ export default {
       },
 
       endpoints: {
-        getAll: 'http://localhost:8080/recipes/all',
-        create: 'http://localhost:8080/recipes/add',
-        update: 'http://localhost:8080/recipes/update',
-        delete: 'http://localhost:8080/recipes/delete',
-        getRawMaterials: 'http://localhost:8080/stocks/all'
+        getAll: '/api/recipes/all',
+        create: '/api/recipes/add',
+        update: '/api/recipes/update',
+        delete: '/api/recipes/delete',
+        getRawMaterials: '/api/stocks/all'
       }
     }
   },

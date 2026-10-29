@@ -1,7 +1,6 @@
-
-const AUTH_SERVER = 'http://localhost:8080'
+const AUTH_SERVER = window.location.origin
 const CLIENT_ID = 'life-is-bananas-vue'
-const REDIRECT_URI = 'http://localhost:8889/callback'
+const REDIRECT_URI = `${window.location.origin}/callback`
 
 function randomString() {
     const bytes = new Uint8Array(32)

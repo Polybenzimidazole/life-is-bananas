@@ -41,7 +41,7 @@ public class AuthorizationServerConfig {
                 .clientId("life-is-bananas-vue")
                 .clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                .redirectUri("http://localhost:8889/callback")
+                .redirectUri("http://localhost:8083/callback")
                 .scope("recipes.read")
                 .scope("recipes.write")
                 .clientSettings(ClientSettings.builder()
@@ -89,7 +89,7 @@ public class AuthorizationServerConfig {
     @Bean
     public AuthorizationServerSettings authorizationServerSettings() {
         return AuthorizationServerSettings.builder()
-                .issuer("http://localhost:8080")
+                .issuer("http://localhost:8083")
                 .build();
     }
 

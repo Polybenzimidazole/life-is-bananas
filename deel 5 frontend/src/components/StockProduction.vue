@@ -84,8 +84,8 @@ export default {
       successMessage: '',
 
       endpoints: {
-        getRecipes: 'http://localhost:8080/recipes/all',
-        useStock: 'http://localhost:8080/stocks/use'
+        getRecipes: '/api/recipes/all',
+        useStock: '/api/stocks/use'
       }
     }
   },

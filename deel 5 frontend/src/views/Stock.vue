@@ -78,7 +78,7 @@ export default {
         }
 
         const response = await axios.get(
-            'http://localhost:8080/stocks/all',
+            '/api/stocks/all',
             {
               headers: {
                 Authorization: `Bearer ${token}`,
