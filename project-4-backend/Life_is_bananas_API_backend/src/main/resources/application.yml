@@ -1,0 +1,14 @@
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/life_is_bananas_api
+    username: admin
+    password: Admin123
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+app:
+  db-init: false
