@@ -11,4 +11,4 @@ spring:
     show-sql: true
 
 app:
-  db-init: false
+  db-init: true
