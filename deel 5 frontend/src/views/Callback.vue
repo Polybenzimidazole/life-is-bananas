@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { handleCallback } from '../services/auth'
+import { handleCallback, takeReturnPath } from '../services/auth'
 
 export default {
   name: 'CallbackView',
@@ -43,7 +43,7 @@ export default {
       )
 
       // Terug naar de homepage na succesvolle login
-      this.$router.replace('/')
+      this.$router.replace(takeReturnPath())
 
     } catch (err) {
       console.error('OAuth-callback mislukt:', err)

@@ -73,9 +73,9 @@ export default {
       successMessage: '',
 
       endpoints: {
-        getRecipes: 'http://localhost:8080/recipes/all',
-        useStock: 'http://localhost:8080/stocks/use',
-        csrf: 'http://localhost:8080/recipes/csrf'
+        getRecipes: '/api/recipes/all',
+        useStock: '/api/stocks/use',
+        csrf: '/api/recipes/csrf'
       }
     }
   },
@@ -104,6 +104,7 @@ export default {
         this.recipeList = response.data
 
       } catch (error) {
+        if (axios.isCancel(error)) return
         console.error('Error fetching recipes:', error)
 
         this.errorMessage =
@@ -172,6 +173,7 @@ export default {
         this.preparationQuantity = 1
 
       } catch (error) {
+        if (axios.isCancel(error)) return
         console.error('Error deducting stock:', error)
         console.error('HTTP status:', error.response?.status)
         console.error('Server response:', error.response?.data)

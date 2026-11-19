@@ -1,5 +1,69 @@
 # Life is Bananas
 
+Deel 5 heeft een **Spring AI-assistent voor vragen over recepten en voorraad**,
+met RAG op actuele databasegegevens en WireMock-tests voor de OpenAI REST API.
+De configuratie, demonstratie en uitleg van het generatieve patroon staan in
+[AI-DEEL5.md](AI-DEEL5.md).
+
+Voor de geautomatiseerde testen van **Project 1, 2, 3 en 4
+(HergebruikPageObjects) in IntelliJ met XAMPP**, zie
+[TESTING-XAMPP.md](TESTING-XAMPP.md). Daar staan de lokale App- en
+Tests-configuraties. De optionele Docker-testopstelling staat in
+[TESTING.md](TESTING.md).
+
+Voor **Project 1, Project 4 en Deel 5 tegelijk op Docker**, zie
+[DOCKER.md](DOCKER.md). Daar staan de poorten, startcommando's en de aansluiting
+van de nieuwe Deel 5-deployment op de bestaande database.
+
+## Project 4 with Docker
+
+Run these commands from the repository root (`life-is-bananas`). Docker Desktop
+must be running with Linux containers; Java, Maven, Node.js, and MySQL are built
+or run inside Docker.
+
+```powershell
+docker compose up --build -d --wait --wait-timeout 240
+```
+
+The first build downloads the Java and Node build tools and application dependencies.
+Compose starts MySQL, waits for it to be ready, then starts the backend and frontend.
+
+- Frontend: <http://localhost:8081>
+- Sign in: <http://localhost:8081/login> (also available from the navigation bar)
+- Backend: <http://localhost:8080> (opens the frontend; API routes require authentication)
+- Sample administrator: username `admin`, password `Admin123!`
+- Sample read-only user: username `engineer1`, password `Engineer123!`
+
+Sign in through the frontend address so the browser shares its login session with
+the API. Both `localhost` and `127.0.0.1` work; login keeps the hostname you opened.
+Opening a protected page without a valid session takes you to sign-in.
+Recipes, stock updates, and production requests go through the frontend's
+`/api/` proxy. The backend creates the schema and seeds sample users, recipes, and
+stock when the database is empty. Existing data is kept in a Docker volume.
+
+```powershell
+docker compose ps                 # Container status and health
+docker compose logs -f            # Follow logs (Ctrl+C to stop following)
+docker compose down               # Stop the stack; keep database data
+```
+
+To change ports or database credentials, copy `.env.example` to `.env`, edit it,
+then run the start command again. Port 8080 must be free for the backend and 8081
+for the frontend by default. MySQL is accessible only inside the Docker network.
+Database credential changes apply when initializing a new database volume; changing
+the environment alone does not change users in an existing database.
+
+To deliberately delete **all Project 4 database data** and re-create the sample data:
+
+```powershell
+docker compose down --volumes
+docker compose up --build -d --wait --wait-timeout 240
+```
+
+This stack builds `project-4-front` and the top-level `project-4-backend` project.
+The duplicate `project-4-backend/Life_is_bananas_API_backend` directory is not used.
+The separate Project 1 Compose file still runs from its own directory.
+
 Project 1 is uitgebreid met een **REST-API en Vue 3-frontend**. De startinstructies,
 MySQL/Docker-configuratie en het API-contract staan in
 [Project-1-Rechttoe-Rechtaan/README.md](Project-1-Rechttoe-Rechtaan/README.md).

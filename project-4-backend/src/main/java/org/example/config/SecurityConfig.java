@@ -1,15 +1,20 @@
 
 package org.example.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
@@ -19,6 +24,9 @@ import java.util.List;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
+
+    @Value("${app.allowed-origins:http://localhost:8888,http://localhost:8889}")
+    private List<String> allowedOrigins;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http)
@@ -30,7 +38,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
 
                         // Publieke loginpagina
-                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/", "/login").permitAll()
 
                         // Ingelogde gebruikers mogen recepten en stock bekijken
                         .requestMatchers(
@@ -53,10 +61,20 @@ public class SecurityConfig {
                 )
 
                 // Standaard Spring Security-loginpagina
-                // Standaard Spring Security-loginpagina
                 .formLogin(form -> form
-                        .defaultSuccessUrl("http://localhost:8889/", true)
+                        .defaultSuccessUrl("/", true)
                         .permitAll()
+                )
+
+                // API-clients krijgen een statuscode, geen HTML-loginpagina.
+                .exceptionHandling(exceptions -> exceptions
+                        .defaultAuthenticationEntryPointFor(
+                                new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
+                                new OrRequestMatcher(
+                                        PathPatternRequestMatcher.withDefaults().matcher("/recipes/**"),
+                                        PathPatternRequestMatcher.withDefaults().matcher("/stocks/**")
+                                )
+                        )
                 )
 
                 // Logout
@@ -73,9 +91,7 @@ public class SecurityConfig {
 
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(
-                List.of("http://localhost:8889")
-        );
+        config.setAllowedOrigins(allowedOrigins);
 
         config.setAllowedMethods(
                 List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")

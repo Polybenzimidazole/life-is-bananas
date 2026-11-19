@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Project 2 - App (XAMPP)" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="be.lifeisbananas.LifeIsBananasApplication" />
+    <module name="life-is-bananas (2)" />
+    <option name="PROGRAM_PARAMETERS" value="--spring.profiles.active=xampp" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Project-2-PageObjects" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

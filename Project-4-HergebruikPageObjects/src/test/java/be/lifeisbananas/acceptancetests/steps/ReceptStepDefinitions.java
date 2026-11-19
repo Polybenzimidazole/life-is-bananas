@@ -45,6 +45,11 @@ public class ReceptStepDefinitions {
         recipes.engineerSignsIn();
     }
 
+    @Given("the bio-engineer is not signed in")
+    public void engineerNotSignedIn() {
+        recipes.engineerIsNotSignedIn();
+    }
+
     @When("the bio-engineer completes {string} for testing with {string} {string} of {string}")
     public void completeRecipe(String name, String amount, String unit, String material) {
         recipes.completeRecipeForTesting(name, material, amount, unit);
@@ -105,6 +110,7 @@ public class ReceptStepDefinitions {
 
 
 @When("the bio-engineer approves the tested recipe {string}")
+@Given("the tested recipe {string} has been approved")
 public void engineerApprovesRecipe(String name) {
     recipes.approveTestedRecipe(name);
 }

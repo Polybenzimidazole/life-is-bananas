@@ -3,6 +3,8 @@
 **/dist/
 **/.env.local
 **/.env.*.local
+/.env
+**/docker-existing-backup.local.json
 **/src/main/resources/static/app/
 **/.idea/
 deel 5 deployment/nginxhtmlmount/

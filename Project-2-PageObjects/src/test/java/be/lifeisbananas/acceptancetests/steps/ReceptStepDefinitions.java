@@ -53,7 +53,13 @@ public class ReceptStepDefinitions {
         loginPage = loginPage.open().trySignIn(email, password);
     }
 
+    @Given("I am on the login page")
+    public void onLoginPage() {
+        loginPage = loginPage.open();
+    }
+
     @When("I search for recipes with {string}")
+    @Given("I have searched for recipes with {string}")
     public void searchForRecipes(String term) {
         receptenPage = receptenPage.search(term);
     }

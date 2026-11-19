@@ -1,0 +1,65 @@
+name: life-is-bananas-project1
+
+services:
+  db:
+    image: mariadb:11.4
+    container_name: mariadb-server
+    env_file:
+      - path: .env.db.local
+        format: raw
+    volumes:
+      - existing-mariadb-data:/var/lib/mysql
+    networks:
+      - existing
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+  app:
+    image: eclipse-temurin:24-jdk
+    container_name: java-lifebananas
+    entrypoint: ["java"]
+    command: ["-jar", "/mnt/life-is-bananas-1.0.0-SNAPSHOT.jar"]
+    env_file:
+      - path: .env.app.local
+        format: raw
+    environment:
+      SERVER_SERVLET_SESSION_COOKIE_NAME: PROJECT1_SESSION
+    volumes:
+      - type: bind
+        source: ${PROJECT1_JAR_DIR:-C:/Users/vanov/javamount}
+        target: /mnt
+        read_only: true
+    ports:
+      - "127.0.0.1:8082:8080"
+    networks:
+      - existing
+    depends_on:
+      db:
+        condition: service_healthy
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: myadmin2
+    environment:
+      PMA_HOST: mariadb-server
+    ports:
+      - "127.0.0.1:8083:80"
+    networks:
+      - existing
+    depends_on:
+      db:
+        condition: service_healthy
+
+networks:
+  existing:
+    external: true
+    name: lifebananas-network
+
+volumes:
+  existing-mariadb-data:
+    external: true
+    name: mariadb-data

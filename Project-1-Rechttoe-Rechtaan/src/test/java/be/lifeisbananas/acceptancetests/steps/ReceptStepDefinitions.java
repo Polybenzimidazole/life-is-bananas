@@ -76,6 +76,12 @@ public class ReceptStepDefinitions {
 		vulAanmeldformulierIn(email, wachtwoord);
 	}
 
+	@Given("I am on the login page")
+	public void iAmOnTheLoginPage() {
+		driver.get(Testomgeving.baseUrl() + "/login.html");
+		wacht().until(ExpectedConditions.visibilityOfElementLocated(By.id("email")));
+	}
+
 	private void vulAanmeldformulierIn(String email, String wachtwoord) {
 		driver.get(Testomgeving.baseUrl() + "/login.html");
 		WebElement emailveld = wacht().until(ExpectedConditions.visibilityOfElementLocated(By.id("email")));
@@ -91,6 +97,7 @@ public class ReceptStepDefinitions {
 	// ----------------------------------------------------------------
 
 	@When("I search for recipes with {string}")
+	@Given("I have searched for recipes with {string}")
 	public void iSearchForRecipesWith(String zoekterm) {
 		WebElement zoekveld = wacht().until(ExpectedConditions.visibilityOfElementLocated(By.id("zoek")));
 		zoekveld.clear();

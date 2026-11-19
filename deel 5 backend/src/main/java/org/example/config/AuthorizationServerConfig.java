@@ -7,6 +7,7 @@ import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.proc.SecurityContext;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
@@ -35,13 +36,15 @@ import java.util.stream.Collectors;
 public class AuthorizationServerConfig {
 
     @Bean
-    public RegisteredClientRepository registeredClientRepository() {
+    public RegisteredClientRepository registeredClientRepository(
+            @Value("${app.frontend-url:http://localhost:8083}") String frontendUrl) {
 
         RegisteredClient vueClient = RegisteredClient.withId(UUID.randomUUID().toString())
                 .clientId("life-is-bananas-vue")
                 .clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                .redirectUri("http://localhost:8083/callback")
+                .redirectUri(frontendUrl + "/callback")
+                .redirectUri(frontendUrl.replace("localhost", "127.0.0.1") + "/callback")
                 .scope("recipes.read")
                 .scope("recipes.write")
                 .clientSettings(ClientSettings.builder()
@@ -87,9 +90,10 @@ public class AuthorizationServerConfig {
     }
 
     @Bean
-    public AuthorizationServerSettings authorizationServerSettings() {
+    public AuthorizationServerSettings authorizationServerSettings(
+            @Value("${app.issuer:http://localhost:8083}") String issuer) {
         return AuthorizationServerSettings.builder()
-                .issuer("http://localhost:8083")
+                .issuer(issuer)
                 .build();
     }
 

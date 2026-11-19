@@ -1,0 +1,49 @@
+name: life-is-bananas-acceptance
+
+# Shared test application for the acceptance suites in Projects 1-4.
+# These containers and this volume are separate from the deployed applications.
+services:
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: life_is_bananas
+      MYSQL_USER: lifeisbananasuser
+      MYSQL_PASSWORD: lifeisbananasuserpw
+      MYSQL_ROOT_PASSWORD: acceptance-local-root
+    ports:
+      - "127.0.0.1:13306:3306"
+    volumes:
+      - acceptance-mysql-data:/var/lib/mysql
+      - ./Project-1-Rechttoe-Rechtaan/db/life_is_bananas.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", 'MYSQL_PWD="$$MYSQL_PASSWORD" mysql --protocol=TCP -h 127.0.0.1 -u"$$MYSQL_USER" "$$MYSQL_DATABASE" -e "SELECT 1" > /dev/null 2>&1']
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+  app:
+    build:
+      context: ./Project-1-Rechttoe-Rechtaan
+      dockerfile: Dockerfile.acceptance
+    environment:
+      DB_HOST: db
+      DB_PORT: "3306"
+      DB_NAME: life_is_bananas
+      DB_USER: lifeisbananasuser
+      DB_PASSWORD: lifeisbananasuserpw
+      SERVER_SERVLET_SESSION_COOKIE_NAME: ACCEPTANCE_SESSION
+    ports:
+      - "127.0.0.1:8090:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:8080/login.html"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+volumes:
+  acceptance-mysql-data:

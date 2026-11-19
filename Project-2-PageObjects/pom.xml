@@ -159,6 +159,8 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
+					<!-- Ook IntelliJ moet Lombok expliciet uitvoeren op recente JDK's. -->
+					<proc>full</proc>
 					<annotationProcessorPaths>
 						<path>
 							<groupId>org.projectlombok</groupId>
@@ -263,12 +265,12 @@
 				</plugins>
 			</build>
 			<properties>
-				<!-- Standaard: de toepassing draait op MySQL op poort 8080.
+				<!-- Standaard: de lokale XAMPP-testapp draait op poort 8091.
 					 Overschrijf ze op de commandolijn, bv. -Dlib.headless=true -->
-				<lib.base.url>http://localhost:8080</lib.base.url>
-				<lib.db.url>jdbc:mysql://localhost:3306/life_is_bananas</lib.db.url>
-				<lib.db.user>lifeisbananasuser</lib.db.user>
-				<lib.db.password>lifeisbananasuserpw</lib.db.password>
+				<lib.base.url>http://localhost:8091</lib.base.url>
+				<lib.db.url>jdbc:mysql://127.0.0.1:3306/life_is_bananas_acceptance</lib.db.url>
+				<lib.db.user>root</lib.db.user>
+				<lib.db.password></lib.db.password>
 				<lib.headless>false</lib.headless>
 			</properties>
 		</profile>
@@ -285,6 +287,56 @@
 				<lib.db.password></lib.db.password>
 				<lib.headless>true</lib.headless>
 			</properties>
+		</profile>
+		<!-- mvn verify -Pacceptance,acceptance-docker -->
+		<profile>
+			<id>acceptance-docker</id>
+			<properties>
+				<lib.environment>docker</lib.environment>
+				<lib.base.url>http://localhost:8090</lib.base.url>
+				<lib.db.url>jdbc:mysql://localhost:13306/life_is_bananas</lib.db.url>
+				<lib.db.user>lifeisbananasuser</lib.db.user>
+				<lib.db.password>lifeisbananasuserpw</lib.db.password>
+				<lib.headless>false</lib.headless>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-failsafe-plugin</artifactId>
+						<configuration>
+							<systemPropertyVariables>
+								<lib.environment>${lib.environment}</lib.environment>
+							</systemPropertyVariables>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<!-- mvn verify -Pacceptance,acceptance-xampp -->
+		<profile>
+			<id>acceptance-xampp</id>
+			<properties>
+				<lib.environment>xampp</lib.environment>
+				<lib.base.url>http://localhost:8091</lib.base.url>
+				<lib.db.url>jdbc:mysql://127.0.0.1:3306/life_is_bananas_acceptance</lib.db.url>
+				<lib.db.user>root</lib.db.user>
+				<lib.db.password></lib.db.password>
+				<lib.headless>false</lib.headless>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-failsafe-plugin</artifactId>
+						<configuration>
+							<systemPropertyVariables>
+								<lib.environment>${lib.environment}</lib.environment>
+							</systemPropertyVariables>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
 		</profile>
 	</profiles>
 

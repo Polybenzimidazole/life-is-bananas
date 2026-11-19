@@ -12,10 +12,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/stocks", produces = "application/json")
-@CrossOrigin(
-        origins = "http://localhost:8889",
-        allowCredentials = "true"
-)
 public class StockRestController {
 
     private final LifeIsBananasServiceimpl lifeIsBananasServiceimpl;

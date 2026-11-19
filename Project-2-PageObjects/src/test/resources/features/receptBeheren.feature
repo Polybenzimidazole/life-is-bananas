@@ -32,5 +32,5 @@ Feature: Manage a recipe
 
   Scenario: Logging in with a wrong password is refused
     Given I am on the login page
-    When I log in as "sarah.johnson@lifeisbananas.com" with password "verkeerd"
+    When I try to log in as "sarah.johnson@lifeisbananas.com" with password "verkeerd"
     Then I should see the error "Onbekend e-mailadres of verkeerd wachtwoord"

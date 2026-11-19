@@ -166,12 +166,12 @@ export default {
       },
 
       endpoints: {
-        getAll: 'http://localhost:8080/recipes/all',
-        create: 'http://localhost:8080/recipes/add',
-        update: 'http://localhost:8080/recipes/update',
-        delete: 'http://localhost:8080/recipes/delete',
-        getRawMaterials: 'http://localhost:8080/stocks/all',
-        csrf: 'http://localhost:8080/recipes/csrf'
+        getAll: '/api/recipes/all',
+        create: '/api/recipes/add',
+        update: '/api/recipes/update',
+        delete: '/api/recipes/delete',
+        getRawMaterials: '/api/stocks/all',
+        csrf: '/api/recipes/csrf'
       }
     }
   },
@@ -197,6 +197,7 @@ export default {
             this.errorMessage = ''
           })
           .catch(error => {
+            if (axios.isCancel(error)) return
             console.error('Error loading recipes:', error)
             this.errorMessage = 'Unable to load recipes from server.'
           })
@@ -213,6 +214,7 @@ export default {
                 : []
           })
           .catch(error => {
+            if (axios.isCancel(error)) return
             console.error('Error loading raw materials:', error)
             this.errorMessage = 'Unable to load raw materials.'
           })
@@ -323,6 +325,7 @@ export default {
         this.closeForm()
         await this.fetchRecipes()
       } catch (error) {
+        if (axios.isCancel(error)) return
         console.error('Error saving recipe:', error)
 
         this.errorMessage =
@@ -344,6 +347,7 @@ export default {
         await axios.delete(deleteUrl, config)
         await this.fetchRecipes()
       } catch (error) {
+        if (axios.isCancel(error)) return
         console.error('Error deleting recipe:', error)
 
         this.errorMessage =

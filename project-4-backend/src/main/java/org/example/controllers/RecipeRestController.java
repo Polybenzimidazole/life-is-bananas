@@ -18,10 +18,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/recipes", produces = "application/json")
-@CrossOrigin(
-        origins = "http://localhost:8889",
-        allowCredentials = "true"
-)
 public class RecipeRestController {
 
     @Autowired

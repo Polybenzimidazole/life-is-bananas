@@ -49,6 +49,11 @@ public class ReceptStepDefinitions {
         recipes.engineerSignsIn();
     }
 
+    @Given("the bio-engineer is not signed in")
+    public void engineerNotSignedIn() {
+        recipes.engineerIsNotSignedIn();
+    }
+
     @When("the bio-engineer completes a recipe for testing by adding an ingredient")
     public void completeRecipe() {
         recipes.completeRecipeForTesting(RECIPE_NAME, INGREDIENT, AMOUNT, UNIT);

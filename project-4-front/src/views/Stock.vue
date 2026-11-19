@@ -65,7 +65,7 @@ export default {
 
       try {
         const response = await axios.get(
-            'http://localhost:8080/stocks/all',
+            '/api/stocks/all',
             {
               withCredentials: true,
               headers: {
@@ -81,6 +81,7 @@ export default {
         this.stocks = response.data
 
       } catch (error) {
+        if (axios.isCancel(error)) return
         console.error('Error loading stock:', error)
         this.errorMessage = 'Unable to load stock from server.'
       } finally {

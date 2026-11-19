@@ -2,6 +2,7 @@
 package org.example.config;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
@@ -86,6 +87,7 @@ public class SecurityConfig {
                         "/recipes/**",
                         "/stocks",
                         "/stocks/**",
+                        "/ai/**",
                         "/auth/me"
                 )
 
@@ -98,9 +100,13 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(
                                 SessionCreationPolicy.STATELESS
                         )
+                        // JWT requests must not rotate the browser's OAuth login session.
+                        .sessionAuthenticationStrategy(new org.springframework.security.web.authentication.session.NullAuthenticatedSessionStrategy())
                 )
 
                 .authorizeHttpRequests(auth -> auth
+
+                        .requestMatchers(HttpMethod.POST, "/ai/ask").authenticated()
 
                         // Ingelogde gebruikers mogen recepten en stock bekijken
                         .requestMatchers(
@@ -152,7 +158,7 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests(auth ->
-                        auth.anyRequest().authenticated()
+                        auth.requestMatchers("/").permitAll().anyRequest().authenticated()
                 )
 
                 .formLogin(Customizer.withDefaults())
@@ -164,15 +170,13 @@ public class SecurityConfig {
 
     // 4. CORS-configuratie voor Vue.js
     @Bean
-    public UrlBasedCorsConfigurationSource corsConfigurationSource() {
+    public UrlBasedCorsConfigurationSource corsConfigurationSource(
+            @Value("${app.allowed-origins:http://localhost:8889,http://localhost:8083}") List<String> origins) {
 
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowedOrigins(
-                List.of(
-                        "http://localhost:8889",
-                        "http://localhost:8083"
-                )
+                origins
         );
 
         config.setAllowedMethods(

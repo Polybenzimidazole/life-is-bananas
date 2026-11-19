@@ -1,0 +1,21 @@
+{
+  "id": "chatcmpl-bananas-test",
+  "object": "chat.completion",
+  "created": 1700000000,
+  "model": "gpt-4o-mini",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "Voor 10 eenheden Banana Bread heb je 3 KG Bananas en 20 PCS Eggs nodig. Er is 2.4 KG Bananas en 20 PCS Eggs beschikbaar. Je komt dus 0.6 KG Bananas tekort."
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 200,
+    "completion_tokens": 55,
+    "total_tokens": 255
+  }
+}

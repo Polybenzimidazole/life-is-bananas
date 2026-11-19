@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Project 4 - Tests (XAMPP)" type="JUnit" factoryName="JUnit">
+    <module name="life-is-bananas (4)" />
+    <option name="PACKAGE_NAME" value="be.lifeisbananas.acceptancetests" />
+    <option name="MAIN_CLASS_NAME" value="be.lifeisbananas.acceptancetests.AcceptanceTestSuite" />
+    <option name="TEST_OBJECT" value="class" />
+    <option name="VM_PARAMETERS" value="-Dlib.environment=xampp" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Project-4-HergebruikPageObjects" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

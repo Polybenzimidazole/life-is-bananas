@@ -28,6 +28,11 @@ public class ReceptTaken {
         receptenPage = loginPage.signIn(Testdata.EMAIL, Testdata.PASSWORD);
     }
 
+    public void engineerIsNotSignedIn() {
+        driver.manage().deleteAllCookies();
+        loginPage = new LoginPage(driver).open();
+    }
+
     private void selectRecipe(String name) {
         receptenPage = receptenPage.search(name);
         receptPage = receptenPage.openRecipe(name);

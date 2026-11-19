@@ -1,3 +1,5 @@
+import Vue from 'vue'
+
 const AUTH_SERVER = window.location.origin
 const CLIENT_ID = 'life-is-bananas-vue'
 const REDIRECT_URI = `${window.location.origin}/callback`
@@ -105,13 +107,29 @@ export async function handleCallback() {
     }
 
     // Voorlopig in het geheugen van de applicatie bewaren
-    accessToken = tokens.access_token
+    authState.accessToken = tokens.access_token
 
     return tokens
 }
 
-let accessToken = null
+const authState = Vue.observable({ accessToken: null })
 
 export function getAccessToken() {
-    return accessToken
+    return authState.accessToken
+}
+
+export function clearAccessToken() {
+    authState.accessToken = null
+}
+
+export function logout() {
+    clearAccessToken()
+    window.location.assign('/logout')
+}
+
+export function takeReturnPath() {
+    const path = sessionStorage.getItem('auth_return_path')
+    sessionStorage.removeItem('auth_return_path')
+    return path && path.startsWith('/') && !path.startsWith('//') &&
+        !path.startsWith('/callback') ? path : '/'
 }

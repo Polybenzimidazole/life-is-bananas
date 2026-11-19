@@ -1,0 +1,14 @@
+# Start lokaal met --spring.profiles.active=xampp.
+# Eigen instellingen voorkomen dat oude DB_*-Dockerwaarden worden gebruikt.
+server:
+  port: ${XAMPP_APP_PORT:8091}
+  servlet:
+    session:
+      cookie:
+        name: XAMPP_SESSION
+
+spring:
+  datasource:
+    url: jdbc:mysql://${XAMPP_DB_HOST:127.0.0.1}:${XAMPP_DB_PORT:3306}/${XAMPP_DB_NAME:life_is_bananas_acceptance}
+    username: ${XAMPP_DB_USER:root}
+    password: ${XAMPP_DB_PASSWORD:}

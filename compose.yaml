@@ -1,0 +1,59 @@
+name: life-is-bananas-project4
+
+services:
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: life_is_bananas_api
+      MYSQL_USER: ${PROJECT4_DB_USER:-admin}
+      MYSQL_PASSWORD: ${PROJECT4_DB_PASSWORD:-Admin123}
+      MYSQL_ROOT_PASSWORD: ${PROJECT4_DB_ROOT_PASSWORD:-project4-local-root}
+    volumes:
+      - project4-mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", 'MYSQL_PWD="$$MYSQL_PASSWORD" mysql --protocol=TCP -h 127.0.0.1 -u"$$MYSQL_USER" "$$MYSQL_DATABASE" -e "SELECT 1" > /dev/null 2>&1']
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+  backend:
+    build:
+      context: ./project-4-backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/life_is_bananas_api
+      SPRING_DATASOURCE_USERNAME: ${PROJECT4_DB_USER:-admin}
+      SPRING_DATASOURCE_PASSWORD: ${PROJECT4_DB_PASSWORD:-Admin123}
+      APP_DB_INIT: "true"
+      APP_FRONTEND_URL: http://localhost:${FRONTEND_PORT:-8081}
+      APP_ALLOWED_ORIGINS: http://localhost:${FRONTEND_PORT:-8081}
+      SERVER_FORWARD_HEADERS_STRATEGY: framework
+      SERVER_SERVLET_SESSION_COOKIE_NAME: PROJECT4_SESSION
+    ports:
+      - "127.0.0.1:${BACKEND_PORT:-8080}:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:8080/login"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+  frontend:
+    build:
+      context: ./project-4-front
+    ports:
+      - "127.0.0.1:${FRONTEND_PORT:-8081}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--spider", "http://127.0.0.1/"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  project4-mysql-data:

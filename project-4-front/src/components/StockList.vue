@@ -59,9 +59,9 @@ export default {
       errorMessage: '',
 
       endpoints: {
-        getAll: 'http://localhost:8080/stocks/all',
-        add: 'http://localhost:8080/stocks/add/',
-        csrf: 'http://localhost:8080/recipes/csrf'
+        getAll: '/api/stocks/all',
+        add: '/api/stocks/add/',
+        csrf: '/api/recipes/csrf'
       }
     }
   },
@@ -93,6 +93,7 @@ export default {
         this.stockList = response.data
 
       } catch (error) {
+        if (axios.isCancel(error)) return
         console.error('Failed to load stock:', error)
         this.errorMessage = 'Failed to load stock.'
       } finally {
@@ -131,6 +132,7 @@ export default {
         await this.fetchStockList()
 
       } catch (error) {
+        if (axios.isCancel(error)) return
         console.error('Failed to add stock:', error)
         this.errorMessage =
             'Failed to add stock. Check your permissions and server logs.'
