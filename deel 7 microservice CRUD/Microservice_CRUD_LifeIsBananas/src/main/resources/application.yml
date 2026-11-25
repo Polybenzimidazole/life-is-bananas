@@ -1,0 +1,13 @@
+server:
+  port: 8085
+spring:
+  Datasource:
+    url: jdbc:mysql://localhost/LifeIsBananas_Microservice_DB
+    username: LifeIsbananasUser
+    password: LifeIsbananasUserpw
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect

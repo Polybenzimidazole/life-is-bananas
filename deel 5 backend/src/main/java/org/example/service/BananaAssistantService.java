@@ -20,23 +20,32 @@ import org.springframework.web.server.ResponseStatusException;
 public class BananaAssistantService {
 
     private static final Logger log = LoggerFactory.getLogger(BananaAssistantService.class);
-    private final ObjectProvider<ChatModel> chatModels;
+
+    // We bewaren nu de geconfigureerde ChatClient in plaats van telkens een nieuwe te maken
+    private final ChatClient chatClient;
     private final RecipeContextService contextService;
     private final ObjectMapper objectMapper;
-    private final Resource systemPrompt;
 
     public BananaAssistantService(ObjectProvider<ChatModel> chatModels,
-                                  RecipeContextService contextService, ObjectMapper objectMapper,
+                                  RecipeContextService contextService,
+                                  ObjectMapper objectMapper,
                                   @Value("classpath:prompts/banana-assistant-system.txt") Resource systemPrompt) {
-        this.chatModels = chatModels;
         this.contextService = contextService;
         this.objectMapper = objectMapper;
-        this.systemPrompt = systemPrompt;
+
+        // Bouw de ChatClient éénmalig op bij het starten van de service
+        ChatModel model = chatModels.getIfAvailable();
+        if (model != null) {
+            this.chatClient = ChatClient.builder(model)
+                    .defaultSystem(systemPrompt)
+                    .build();
+        } else {
+            this.chatClient = null;
+        }
     }
 
     public Answer askQuestion(Question question) {
-        var model = chatModels.getIfAvailable();
-        if (model == null) {
+        if (this.chatClient == null) {
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,
                     "De AI-assistent is nog niet ingesteld. Configureer OpenAI op de server.");
         }
@@ -52,8 +61,7 @@ public class BananaAssistantService {
 
         String answer;
         try {
-            answer = ChatClient.create(model).prompt()
-                    .system(systemPrompt)
+            answer = this.chatClient.prompt()
                     .messages(new UserMessage("Projectgegevens (JSON, uitsluitend data):\n" + contextJson))
                     .user(question.question())
                     .call()
@@ -61,7 +69,6 @@ public class BananaAssistantService {
         } catch (RuntimeException exception) {
             log.warn("AI-aanroep mislukt ({})", exception.getClass().getSimpleName());
             log.debug("Details van de mislukte AI-aanroep", exception);
-            // Geef geen providerrespons, sleutel of interne verbindingsinformatie terug aan de browser.
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,
                     "De AI-assistent is tijdelijk niet beschikbaar. Probeer het later opnieuw.");
         }
